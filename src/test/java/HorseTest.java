@@ -14,13 +14,13 @@ public class HorseTest {
     //конструктор
     //Проверить, что при передаче в конструктор первым параметром null, будет выброшено IllegalArgumentException. Для этого нужно воспользоваться методом assertThrows;
     @Test
-    public void checkIllegalArgumentException(){
+    public void checkIfNameIsNull(){
         assertThrows(IllegalArgumentException.class, ()->new Horse(null,99,99));
     }
 
     //Проверить, что при передаче в конструктор первым параметром null, выброшенное исключение будет содержать сообщение "Name cannot be null.". Для этого нужно получить сообщение из перехваченного исключения и воспользоваться методом assertEquals;
     @Test
-    public void checkExceptionMessage(){
+    public void checkMessageIfNameIsNull(){
         try {
             new Horse(null,99,99);
             fail();
@@ -32,14 +32,14 @@ public class HorseTest {
     //Проверить, что при передаче в конструктор первым параметром пустой строки или строки содержащей только пробельные символы (пробел, табуляция и т.д.), будет выброшено IllegalArgumentException. Чтобы выполнить проверку с разными вариантами пробельных символов, нужно сделать тест параметризованным;
     @ParameterizedTest
     @ValueSource(strings = { "", "\s\t", "\n" })
-    public void checkEmptyName(String name){
+    public void checkIfNameIsEmpty(String name){
         assertThrows(IllegalArgumentException.class, ()->new Horse(name,99,99));
     }
 
     //Проверить, что при передаче в конструктор первым параметром пустой строки или строки содержащей только пробельные символы (пробел, табуляция и т.д.), выброшенное исключение будет содержать сообщение "Name cannot be blank.";
     @ParameterizedTest
     @ValueSource(strings = { "", "\s\t", "\n" })
-    public void checkMessageEmptyName(String name){
+    public void checkMessageIfNameIsEmpty(String name){
         try {
             new Horse(name, 99, 99);
             fail();
@@ -51,14 +51,14 @@ public class HorseTest {
     //Проверить, что при передаче в конструктор вторым параметром отрицательного числа, будет выброшено IllegalArgumentException;
     @ParameterizedTest
     @ValueSource(doubles = { -1, -99, -1000 })
-    public void checkNegativeSecondParamException(double value){
+    public void checkNegativeSpeed(double value){
         assertThrows(IllegalArgumentException.class, ()->new Horse("new Horse",value,99));
     }
 
     //Проверить, что при передаче в конструктор вторым параметром отрицательного числа, выброшенное исключение будет содержать сообщение "Speed cannot be negative.";
     @ParameterizedTest
     @ValueSource(doubles = { -1, -99, -1000 })
-    public void checkNegativeSecondParamExceptionMessage(double value){
+    public void checkMessageNegativeSpeed(double value){
         try {
             new Horse("new Horse", value, 99);
             fail();
@@ -70,14 +70,14 @@ public class HorseTest {
     //Проверить, что при передаче в конструктор третьим параметром отрицательного числа, будет выброшено IllegalArgumentException;
     @ParameterizedTest
     @ValueSource(doubles = { -1, -99, -1000 })
-    public void checkNegativeThirdParamException(double value){
+    public void checkNegativeDistance(double value){
         assertThrows(IllegalArgumentException.class, ()->new Horse("new Horse",value,99));
     }
 
     //Проверить, что при передаче в конструктор третьим параметром отрицательного числа, выброшенное исключение будет содержать сообщение "Distance cannot be negative.";
     @ParameterizedTest
     @ValueSource(doubles = { -1, -99, -1000 })
-    public void checkNegativeThirdParamExceptionMessage(double value){
+    public void checkMessageNegativeDistance(double value){
         try {
             new Horse("new Horse", 99, value);
             fail();
@@ -117,7 +117,7 @@ public class HorseTest {
     }
     //Проверить, что метод возвращает ноль, если объект был создан с помощью конструктора с двумя параметрами;
     @Test
-    public void getDistance2() throws NoSuchFieldException, IllegalAccessException {
+    public void getZeroDistance() throws NoSuchFieldException, IllegalAccessException {
         Horse horse = new Horse("newHorse", 99);
         Field field = Horse.class.getDeclaredField("distance");
         field.setAccessible(true);
@@ -127,7 +127,7 @@ public class HorseTest {
     //метод move
     //Проверить, что метод вызывает внутри метод getRandomDouble с параметрами 0.2 и 0.9. Для этого нужно использовать MockedStatic и его метод verify;
     @Test
-    public void moveUsesGetRandom(){
+    public void moveGetRandomDouble(){
         try (MockedStatic<Horse> mockedStatic = mockStatic(Horse.class)) {
             new Horse("newHorse", 99, 100).move();
             mockedStatic.verify(()->Horse.getRandomDouble(0.2,0.9));
@@ -138,7 +138,7 @@ public class HorseTest {
     //Для этого нужно замокать getRandomDouble, чтобы он возвращал определенные значения, которые нужно задать параметризовав тест.
     @ParameterizedTest
     @ValueSource(doubles = {0.1,0.2,0.5,100})
-    public void move(double value){
+    public void moveGetRandomDoubleParameterized(double value){
         try (MockedStatic<Horse> mockedStatic = mockStatic(Horse.class)) {
             Horse horse = new Horse("newHorse", 99, 100);
             mockedStatic.when(()->Horse.getRandomDouble(0.2,0.9)).thenReturn(value);
